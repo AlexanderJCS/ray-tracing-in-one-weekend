@@ -1,8 +1,6 @@
 /*
  * Follows the Ray Tracing in One Weekend book:
  * https://raytracing.github.io/books/RayTracingInOneWeekend.html#overview
- *
- * Next step: implement chapter 6.5
  */
 
 #include <iostream>
