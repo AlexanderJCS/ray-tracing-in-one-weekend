@@ -1,8 +1,6 @@
 #ifndef RAY_TRACER_VEC3_H
 #define RAY_TRACER_VEC3_H
 
-#include <cmath>
-#include <iostream>
 
 class vec3 {
 public:

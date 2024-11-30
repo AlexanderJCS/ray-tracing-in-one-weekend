@@ -1,7 +1,7 @@
 #ifndef RAY_TRACER_HITTABLE_H
 #define RAY_TRACER_HITTABLE_H
 
-#include "ray.h"
+#include "rtweekend.h"
 
 class hit_record {
 public:

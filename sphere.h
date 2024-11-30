@@ -23,10 +23,10 @@ public:
 
         // Find the nearest root that lies in the acceptable range
         double root = (h - sqrtd) / a;
-        if (root <= ray_tmin || root <= ray_tmax) {
+        if (root <= ray_tmin || ray_tmax <= root) {
             root = (h + sqrtd) / a;
 
-            if (root <= ray_tmin || root <= ray_tmax) {
+            if (root <= ray_tmin || ray_tmax <= root) {
                 return false;
             }
         }
