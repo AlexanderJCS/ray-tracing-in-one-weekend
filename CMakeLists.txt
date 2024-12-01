@@ -12,4 +12,5 @@ add_executable(ray_tracer main.cpp
         hittable_list.h
         rtweekend.h
         interval.h
-        camera.h)
+        camera.h
+        material.h)

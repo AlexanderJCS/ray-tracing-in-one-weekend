@@ -3,10 +3,13 @@
 
 #include "rtweekend.h"
 
+class material;
+
 class hit_record {
 public:
     point3 p;
     vec3 normal;
+    std::shared_ptr<material> mat;
     double t = 0;
     bool front_face = false;
 

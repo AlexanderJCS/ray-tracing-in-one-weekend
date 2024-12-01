@@ -45,6 +45,11 @@ public:
         return std::sqrt(length_squared());
     }
 
+    [[nodiscard]] bool near_zero() const {
+        double s = 1e-8;
+
+        return std::fabs(e[0]) < s && std::fabs(e[1]) < s && std::fabs(e[2]) < s;
+    }
 
     static vec3 random() {
         return {random_double(), random_double(), random_double()};
@@ -121,6 +126,10 @@ inline vec3 random_on_hemisphere(const vec3& normal) {
     }
 
     return -on_unit_sphere;
+}
+
+inline vec3 reflect(const vec3& v, const vec3& n) {
+    return v - 2 * dot(v, n) * n;
 }
 
 #endif  // RAY_TRACER_VEC3_H
