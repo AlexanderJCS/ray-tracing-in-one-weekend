@@ -57,10 +57,11 @@ private:
 
 class dielectric : public material {
 public:
-    explicit dielectric(double refraction_index) : refraction_index(refraction_index) {}
+    explicit dielectric(double refraction_index, color albedo) : refraction_index(refraction_index), albedo(albedo) {}
 
     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
-        attenuation = color(1, 1, 1);
+        attenuation = albedo;
+
         double ri = rec.front_face ? (1 / refraction_index) : refraction_index;
 
         vec3 unit_direction = unit_vector(r_in.direction());
@@ -81,6 +82,7 @@ public:
     }
 
 private:
+    color albedo;
     double refraction_index;
 
     static double reflectance(double cosine, double refraction_index) {
