@@ -13,10 +13,14 @@ public:
     int image_width = 100;
     int samples_per_pixel = 10;
     int max_depth = 10;
+
     double vfov = 90;
     point3 lookfrom = point3(0, 0, 0);
     point3 lookat = point3(0, 0, -1);
     vec3 vup = vec3(0, 1, 0);
+
+    double defocus_angle = 0;
+    double focus_dist = 10;
 
     void render(const hittable& world) {
         initialize();
@@ -56,16 +60,17 @@ private:
     vec3 pixel_delta_u;
     vec3 pixel_delta_v;
     vec3 u, v, w;
+    vec3 defocus_disk_u;
+    vec3 defocus_disk_v;
 
     void initialize() {
         image_height = std::max(int(image_width / aspect_ratio), 1);
 
         center = lookfrom;
 
-        double focal_length = (lookfrom - lookat).length();
         double theta = degrees_to_radians(vfov);
         double h = std::tan(theta / 2);
-        double viewport_height =  2 * h * focal_length;
+        double viewport_height =  2 * h * focus_dist;
         double viewport_width = viewport_height * (double(image_width) / image_height);
 
         w = unit_vector(lookfrom - lookat);
@@ -78,25 +83,36 @@ private:
         pixel_delta_u = viewport_u / image_width;
         pixel_delta_v = viewport_v / image_height;
 
-        point3 viewport_upper_left = center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+        point3 viewport_upper_left = center - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+        double defocus_radius = focus_dist * std::tan(degrees_to_radians(defocus_angle / 2));
+        defocus_disk_u = u * defocus_radius;
+        defocus_disk_v = v * defocus_radius;
     }
 
     [[nodiscard]] ray get_ray(int i, int j) const {
         vec3 offset = sample_square();
         vec3 pixel_sample = pixel00_loc + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
-        vec3 ray_direction = pixel_sample - center;
 
-        return {center, ray_direction};
+        vec3 ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
+        vec3 ray_direction = pixel_sample - ray_origin;
+
+        return {ray_origin, ray_direction};
     }
 
     [[nodiscard]] static vec3 sample_square() {
         return {random_double() - 0.5, random_double() - 0.5, 0};
     }
 
+    [[nodiscard]] point3 defocus_disk_sample() const {
+        vec3 p = random_in_unit_disk();
+        return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
+    }
+
     [[nodiscard]] static color ray_color(const ray& r, int depth, const hittable& world) {
         if (depth <= 0) {
-            return color(0, 0, 0);
+            return {0, 0, 0};
         }
 
         hit_record rec;
@@ -109,7 +125,7 @@ private:
                 return attenuation * ray_color(scattered, depth - 1, world);
             }
 
-            return color(0, 0, 0);
+            return {0, 0, 0};
         }
 
         vec3 unit_direction = unit_vector(r.direction());
