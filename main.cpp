@@ -12,7 +12,7 @@
 int main() {
     hittable_list world;
 
-    auto material_ground = std::make_shared<lambertian>(color(0.28 * 3.5, 0, 0.2 * 3.5));
+    auto material_ground = std::make_shared<lambertian>(color(0.28 + 0.5, 0.4, 0.2 + 0.4));
     auto material_blue_diamond = std::make_shared<dielectric>(2.4, color(0.72, 0.95, 1));
     auto material_blue_glass   = std::make_shared<dielectric>(1.50, color(0.1, 0.5, 0.7));
     auto material_green_glass   = std::make_shared<dielectric>(1.50, color(0.56 * 1.2, 0.78 * 1.2, 0.7 * 1.2));
