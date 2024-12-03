@@ -31,7 +31,7 @@ int main() {
 
     cam.aspect_ratio = 16.0 / 9;
     cam.image_width = 1000;
-    cam.samples_per_pixel = 350;
+    cam.samples_per_pixel = 450;
     cam.max_depth = 50;
 
     cam.vfov = 35;
@@ -40,7 +40,7 @@ int main() {
     cam.vup = vec3(0, 1, 0);
     cam.vup /= cam.vup.length();  // normalize
 
-    cam.defocus_angle = 1;
+    cam.defocus_angle = 0;
     cam.focus_dist = 4;
 
     cam.render(world);
